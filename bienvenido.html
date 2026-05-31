@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bienvenido a Ahavah Automation</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #000000;
+      background: #ffffff;
+      margin: 0;
+      padding: 32px 24px;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; }
+    p { margin: 0 0 1em; }
+    ol { margin-top: 0; margin-bottom: 1.5em; padding-left: 2em; }
+    li { margin-bottom: 1.8em; }
+    a.link { color: #2F6F85; text-decoration: underline; }
+    .sub { margin-top: 0.4em; padding-left: 4em; }
+    .lang-bar {
+      margin-bottom: 1.5em;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e1dfdd;
+    }
+    .lang-btn {
+      display: inline-block;
+      background: #111111;
+      color: #ffffff;
+      font-size: 13px;
+      padding: 8px 18px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .lang-btn:hover { background: #333333; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- Language toggle button -->
+    <div class="lang-bar">
+      <button class="lang-btn" id="langToggle" onclick="toggleLang()">View in English</button>
+    </div>
+
+    <!-- ===================== SPANISH (default visible) ===================== -->
+    <div id="es">
+      <p>&iexcl;Hola!</p>
+
+      <p>&iexcl;Bienvenido a Ahavah Automation! Estamos encantados de tenerte a bordo.</p>
+
+      <p>Para empezar, por favor completa lo siguiente:</p>
+
+      <ol>
+        <li>
+          <a class="link" id="es-form" href="#">Formulario de admisi&oacute;n - Rellenar el formulario</a>
+          <div class="sub">Por favor, rellene este formulario para proporcionar su informaci&oacute;n b&aacute;sica y los datos necesarios.</div>
+        </li>
+
+        <li>
+          <a class="link" id="es-packet" href="#">Incorporaci&oacute;n de empleados W2</a>
+          <div class="sub">Por favor, revise y complete los documentos de incorporaci&oacute;n incluidos en este paquete.</div>
+          <div class="sub"><strong>Importante:</strong> Si no puedes terminar de una sola sesi&oacute;n, por favor utiliza el <em>enlace del curr&iacute;culum</em> que te enviamos al correo electr&oacute;nico para continuar. <strong>No vuelvas a hacer clic en el enlace original, ya que esto podr&iacute;a crear una publicaci&oacute;n duplicada.</strong></div>
+        </li>
+      </ol>
+
+      <p><strong>Nota:</strong> Tus credenciales de acceso a Ahavah Apps te ser&aacute;n enviadas en un correo electr&oacute;nico separado.</p>
+
+      <p>Si tienes alguna pregunta o necesitas ayuda, no dudes en contactar.</p>
+
+      <p>&iexcl;Espero trabajar contigo!</p>
+
+      <p>Gracias y un saludo cordial,</p>
+
+      <p>Equipo de Incorporaci&oacute;n Ahavah</p>
+    </div>
+
+    <!-- ===================== ENGLISH (hidden by default) ===================== -->
+    <div id="en" class="hidden">
+      <p>Hello!</p>
+
+      <p>Welcome to Ahavah Automation! We&rsquo;re excited to have you on board.</p>
+
+      <p>To get started, please complete the following:</p>
+
+      <ol>
+        <li>
+          <a class="link" id="en-form" href="#">Onboarding Intake Form - Fill out form</a>
+          <div class="sub">Kindly fill out this form to provide your basic information and required details.</div>
+        </li>
+
+        <li>
+          <a class="link" id="en-packet" href="#">W2 Employee Onboarding</a>
+          <div class="sub">Please review and complete the onboarding documents included in this packet.</div>
+          <div class="sub"><strong>Important:</strong> If you are unable to finish in one sitting, please use the <em>resume link</em> sent to your email to continue. <strong>Do not click the original link again, as this may create a duplicate submission.</strong></div>
+        </li>
+      </ol>
+
+      <p><strong>Note:</strong> Your login credentials for Ahavah Apps will be sent to you in a separate email.</p>
+
+      <p>If you have any questions or need assistance, feel free to reach out.</p>
+
+      <p>Looking forward to working with you!</p>
+
+      <p>Thanks and best regards,</p>
+
+      <p>Ahavah Onboarding Team</p>
+    </div>
+
+  </div>
+
+  <script>
+    // =========================================================
+    //  CATEGORY TITLE LOOKUP
+    //  The flow passes a short category code via ?cat=
+    //  Accepted codes: w2 | us | intl
+    //  (Anything else falls back to a generic label.)
+    // =========================================================
+    var titlesES = {
+      'w2':   'Incorporaci\u00f3n de empleados W2',
+      'us':   'Incorporaci\u00f3n de contratista de EE. UU.',
+      'intl': 'Incorporaci\u00f3n de contratista internacional'
+    };
+    var titlesEN = {
+      'w2':   'W2 Employee Onboarding',
+      'us':   'US Contractor Onboarding',
+      'intl': 'International Contractor Onboarding'
+    };
+
+    // --- Read URL parameters ---
+    // Example: bienvenido.html?w2=<encoded link>&form=<encoded link>&cat=w2
+    var params = new URLSearchParams(window.location.search);
+    var packetLink = params.get('link');   // the dynamic onboarding packet link
+    var formLink = params.get('form');   // the intake form link
+    var cat = (params.get('cat') || '').toLowerCase();
+
+    // --- Inject the dynamic packet link (both languages) ---
+    if (packetLink && packetLink.indexOf('https') === 0) {
+      document.getElementById('es-packet').href = packetLink;
+      document.getElementById('en-packet').href = packetLink;
+    }
+
+    // --- Inject the intake form link (both languages) ---
+    if (formLink && formLink.indexOf('http') === 0) {
+      document.getElementById('es-form').href = formLink;
+      document.getElementById('en-form').href = formLink;
+    }
+
+    // --- Inject the category-specific titles (both languages) ---
+    if (titlesES[cat]) {
+      document.getElementById('es-packet').textContent = titlesES[cat];
+      document.getElementById('en-packet').textContent = titlesEN[cat];
+    }
+
+    // =========================================================
+    //  LANGUAGE TOGGLE
+    // =========================================================
+    function toggleLang() {
+      var es = document.getElementById('es');
+      var en = document.getElementById('en');
+      var btn = document.getElementById('langToggle');
+      if (es.classList.contains('hidden')) {
+        es.classList.remove('hidden');
+        en.classList.add('hidden');
+        btn.textContent = 'View in English';
+      } else {
+        es.classList.add('hidden');
+        en.classList.remove('hidden');
+        btn.textContent = 'Ver en Espa\u00f1ol';
+      }
+    }
+  </script>
+
+</body>
+</html>
